@@ -3,7 +3,9 @@
 //  Project8
 //
 //  Created by Oluwabusayo Olorunnipa on 7/16/21.
-//
+//  Ways to improve game:
+//  Set an alert for maximum level
+//  Include back button to return to level 1
 
 import UIKit
 
@@ -23,6 +25,7 @@ class ViewController: UIViewController {
             scoreLabel.text = "Score: \(score)"
         }
     }
+    var rightAnswers = 0
     var level = 1
     
     override func loadView() {
@@ -81,6 +84,8 @@ class ViewController: UIViewController {
 //        create uiview to hold buttons to tap for guesses
         let buttonsView = UIView()
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
+        buttonsView.layer.borderWidth = 1
+        buttonsView.layer.borderColor = UIColor.lightGray.cgColor
         view.addSubview(buttonsView)
         
         
@@ -168,14 +173,25 @@ class ViewController: UIViewController {
             answersLabel.text = splitAnswers?.joined(separator: "\n")
             
             currentAnswer.text = ""
-            score += 1
+            score += 10
+            rightAnswers += 1
 //            scoreLabel.text = "Score: \(score)"
             
-            if score % 7 == 0 {
+            if rightAnswers % 7 == 0 {
                 let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
                 present(ac, animated: true)
-            }
+                }
+            } else {
+                let ac = UIAlertController(title: "Wrong!", message: "Sorry, that answer was not found.", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Try Again", style: .cancel))
+                currentAnswer.text = ""
+                score -= 10
+                
+                for button in activatedButtons {
+                    button.isHidden = false
+                }
+                present(ac, animated: true)
         }
     }
     
